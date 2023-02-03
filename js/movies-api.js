@@ -43,10 +43,6 @@ const addMovie = async (movie) => {
   return await response.json();
 };
 
-
-// Here is where you will create your own functions to further interact with the database.
-// HAPPY CODING!!!
-
 // TODO An example of a function that **updates a movie** in the database:
 //     ```js
 const updateMovie = async (movie) => {
@@ -69,9 +65,9 @@ const updateMovie = async (movie) => {
 // TODO An example of a function that **deletes a movie** in the database:
 
 
-const deleteMovie = async (movie) => {
+const deleteMovie = async (movieID) => {
     try {
-        const url = `/movies/${movie.id}`;
+        const url = `/movies/${movieID}`;
         const options = {
             method: 'DELETE',
             headers: {

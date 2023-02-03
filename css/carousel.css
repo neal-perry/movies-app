@@ -1,0 +1,133 @@
+/*font-family: 'Heebo', sans-serif;*/
+/*font-family: 'Raleway', sans-serif;*/
+* {
+    box-sizing: border-box;
+    font-weight: 100;
+    color: #eee;
+    font-family: 'Heebo', sans-serif;
+    /*font-family: 'Raleway', sans-serif;*/
+}
+.movieArt {
+    position: absolute;
+    width: 20%;
+    height: auto;
+    transition: all 2s;
+    right: 0;
+    margin-top: 4%;
+    box-shadow: 0px 0px 35px 4px rgba(0, 0, 0, 0.5);
+    transform: perspective(100em) translate3d(0%, 0, 10px)
+    rotate3d(0, 1, 0, -60deg);
+}
+
+.selected {
+    transform: perspective(100em) translate3d(-200%, 0, 0) rotate3d(0, 1, 0, 0deg);
+}
+
+.left {
+    /* rotate 90deg FROM -60deg */
+    transform: perspective(100em) translate3d(-400%, 0, 0)
+    rotate3d(0, 1, 0, 90deg);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0%;
+    width: 100%;
+    height: 100vh;
+    background-color: #333;
+}
+
+#movieContainer {
+    display: block;
+    box-shadow: 0px 0px 35px 4px rgba(0, 0, 0, 0.5);
+    background-color: #222;
+    position: relative;
+    width: 100%;
+    min-height: 40vw;
+}
+
+.movie-card {
+    background-color: #2d2d2d;
+    border-radius: .7em;
+    border: solid #666;
+    padding: .3em;
+    margin: .25em 0;
+    max-width: 40vw;
+}
+
+button {
+    transition: color .5s;
+    color: #ccc;
+    border-radius: .5em;
+    border: solid #666;
+    background-color: #2d2d2d;
+
+}
+
+.movie-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 2em;
+    line-height: 1em;
+    font-style: italic;
+}
+
+.delete-btn:hover {
+
+    color: #de6565;
+}
+
+input {
+    font-weight: 500;
+    color: #222;
+    background-color: lightgray;
+}
+
+#addMovie {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.title-div {
+    display: flex;
+}
+
+.title-div>input {
+    flex-grow: 1;
+}
+
+.movie-data {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#addBtn {
+    margin: auto;
+}
+
+.movie-data1 {
+    display: flex;
+    width: 33%;
+}
+
+.movie-data1>input {
+    flex-grow: 1;
+}
+
+.description {
+    color: #ccc;
+    font-size: small;
+    font-style: italic;
+}
+
+.runtime-input {
+    width: 100px;
+}

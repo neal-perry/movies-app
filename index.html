@@ -3,26 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <title>Movies App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;400;500&family=Raleway:wght@100;200;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/carousel.css">
+
 </head>
 <body>
 
+
+<div id="movieContainer"></div>
+<div class="btnContainer">
+    <button id="leftBtn"><<</button>
+    <button id="rightBtn">>></button>
+</div>
+
 <div id="addMovie">
 <form>
-    <label>Title:</label>
-    <input id="title" type="text">
-    <label>Genre:</label>
-    <input id="genre" type="text">
-    <label>Year:</label>
-    <input id="year" type="text">
-    <label>Runtime:</label>
-    <input id="runtime" type="text">
-    <label>Director:</label>
-    <input id="director" type="text">
-    <label>Actors:</label>
-    <input id="actors" type="text">
-    <label>Rating:</label>
-    <input id="rating" type="text">
+    <div class="title-div">
+        <label for="title">Title:</label>
+        <input id="title" type="text">
+    </div>
+    <div class="title-div">
+        <label for="description">Description:</label>
+        <input id="description" type="text">
+    </div>
+
+   <div class="movie-data">
+       <div class="movie-data1">
+           <label for="genre">Genre:</label>
+           <input  id="genre" type="text">
+       </div>
+
+       <div class="movie-data1">
+           <label for="year">Year:</label>
+           <input  id="year" type="text">
+       </div>
+
+       <div class="movie-data1">
+           <label for="runtime">Runtime:</label>
+           <input class="runtime-input"  id="runtime" type="text">
+       </div>
+
+   </div>
+
+    <div class="movie-data">
+        <div class="movie-data1">
+            <label for="director">Director:</label>
+            <input id="director" type="text">
+        </div>
+
+        <div class="movie-data1">
+            <label for="actors">Actors:</label>
+            <input id="actors" type="text">
+        </div>
+
+        <div class="movie-data1">
+            <label for="rating">Rating:</label>
+            <input id="rating" type="text">
+        </div>
+
+
+    </div>
     <button id="addBtn" type="submit">Add</button>
+
+
 </form>
 </div>
 <div id="movieList"></div>
