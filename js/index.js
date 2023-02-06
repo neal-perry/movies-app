@@ -1,6 +1,9 @@
 (async () => {
 
     //TODO: FUNCTION THAT GETS MOVIES FROM THE DATABASE AND DYNAMICALLY PLACES HTML ON THE PAGE
+    let isRunning = false
+
+
 
     function placeHolder(movie){
         if(movie.description === undefined || movie.description === ''){
@@ -28,8 +31,10 @@
     }
 
     let movies = await getMovies();
-    async function reloadMovies(){
-         movies = await getMovies();
+    async function reloadMovies(reload = true){
+        if(reload){
+            movies = await getMovies();
+        }
 
       let html = ""
       movies.forEach(function(movie){
@@ -57,7 +62,7 @@
 
     $(document).on('click', '.delete-btn', function(){
         let movieID = $(this).parents('[data-movieId]').attr('data-movieId');
-        console.log(movieID);
+        // console.log(movieID);
         deleteMovie(movieID).then(() => reloadMovies().then(()=>init())
         );
 
@@ -180,12 +185,54 @@
         );
     });
 
+//TODO: CREATE A FUNCTION THAT WITH A SEARCH BAR THAT SEARCHES FOR A MOVIE IN THE LIST AND RETURNS THE MOVIE IF FOUND TO THE TOP OF THE MOVIE ARRAY
+    document.getElementById("searchBtn").addEventListener("click", (e) => {
+        e.preventDefault();
+        let search = document.getElementById("search").value;
+        let movie = movies.find(movie => movie.title.toLowerCase() === search.toLowerCase());
+        if(movie){
+            // console.log(movie);
+            let index = movies.indexOf(movie);
+            // console.log(index);
+            movies.splice(index, 1);
+            movies.unshift(movie);
+            console.log(movies);
+            reloadMovies(false).then(()=>init());
+        }
+    })
+
+
+
+    function sortAZ() {
+        movies.sort((a, b) => a.title.localeCompare(b.title));
+        reloadMovies(false).then(()=>init());
+    }
+    function sortZA() {
+        movies.sort((a, b) => b.title.localeCompare(a.title));
+        reloadMovies(false).then(()=>init());
+    }
+
+    document.getElementById("azBtn").addEventListener("click", (e) => {
+     e.preventDefault()
+        sortAZ()
+    });
+    document.getElementById("zaBtn").addEventListener("click", (e) => {
+        e.preventDefault()
+        sortZA()
+    });
+
+let date = new Date().toLocaleDateString()
+    $("#vhs-date").html(date)
+    console.log(date);
+
+
+
+
 
 //TODO: CAROUSEL JAVASCRIPT START-------------------------//
 
     let mc = document.getElementById("movieContainer");
 
-    let movieTitles = ["shrek", "jaws", "space balls", "space jam", "star wars"];
     async function init() {
         // document.getElementById("m1").style.zIndex = movies.length+1
         mc.innerHTML = ''
@@ -193,9 +240,70 @@
             movies.map(({ title }, index) => {
                 return setAPIData(title, index);
             })
-        );
+        ).then(()=>{mc.innerHTML += `<div class ="btnContainer">
+            <button id="leftBtn">
+                <
+                <
+            </button>
+            <button id="rightBtn">>></button>
+        </div>`
+       });
     }
     init();
+
+
+    document.addEventListener("click", (e) => {
+        const target = e.target.closest("#leftBtn");
+
+        if (target) {
+            let currentImg = document.getElementsByClassName("selected")[0];
+            let idNum = parseInt(currentImg.id.slice(1));
+
+            if (idNum < movies.length - 1) {
+                let nextImg = document.getElementById(`m${idNum + 1}`);
+                currentImg.classList.toggle("selected");
+                currentImg.classList.toggle("left");
+                nextImg.classList.toggle("selected");
+            }
+            manageZ(idNum);
+        }
+    });
+
+    document.addEventListener("click", (e) => {
+        const target = e.target.closest("#rightBtn");
+
+        if (target) {
+            let currentImg = document.getElementsByClassName("selected")[0];
+            let idNum = parseInt(currentImg.id.slice(1));
+            if (idNum > 0) {
+                let nextImg = document.getElementById(`m${idNum - 1}`);
+                console.log(nextImg);
+                currentImg.classList.toggle("selected");
+                nextImg.classList.toggle("left");
+                nextImg.classList.toggle("selected");
+            }
+            manageZ(idNum);
+        }
+    });
+
+
+    //TODO: FUNCTION FOR LOADING SCREEN ANIMATION
+
+
+
+    function loadingScreen (){
+       if(!isRunning){
+           isRunning = true
+           $("#blur, #vhs").toggleClass("hidden");
+           setTimeout(function(){
+               $("#blur, #vhs").toggleClass("hidden");
+               isRunning = false
+           }, 2000);
+       }
+
+    }
+
+
 
     function manageZ(id) {
         let movieCards = mc.getElementsByTagName("img");
@@ -213,30 +321,6 @@
         }
     }
 
-    document.getElementById("leftBtn").addEventListener("click", () => {
-        let currentImg = document.getElementsByClassName("selected")[0];
-        let idNum = parseInt(currentImg.id.slice(1));
-        if (idNum < movies.length - 1) {
-            let nextImg = document.getElementById(`m${idNum + 1}`);
-            currentImg.classList.toggle("selected");
-            currentImg.classList.toggle("left");
-            nextImg.classList.toggle("selected");
-        }
-        manageZ(idNum)
-    });
-    document.getElementById("rightBtn").addEventListener("click", () => {
-        let currentImg = document.getElementsByClassName("selected")[0];
-        let idNum = parseInt(currentImg.id.slice(1));
-        if (idNum > 0) {
-            let nextImg = document.getElementById(`m${idNum - 1}`);
-            console.log(nextImg);
-            currentImg.classList.toggle("selected");
-            nextImg.classList.toggle("left");
-            nextImg.classList.toggle("selected");
-        }
-        manageZ(idNum)
-    });
-
     async function setAPIData(title, index) {
         return new Promise((resolve, reject) => {
             try {
@@ -252,6 +336,7 @@
                         mc.innerHTML += `<img id='m${index}' class='movieArt' src='${source}'/>`;
                     }
                 });
+
                 resolve("done");
             } catch (err) {
                 console.log("oops", err);
@@ -269,6 +354,7 @@
                     console.log("no film");
                 } else {
                     console.log("loading");
+                    loadingScreen();
                     fetch(
                         "https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" +
                         film +
@@ -282,7 +368,7 @@
                     )
                         .then((resp) => resp.json())
                         .then((data) => {
-                            console.log(data);
+                            // console.log(data);
                             if (data != "Nothing found." || data.results.length > 0) {
                                 resolve(
                                     data.results[0]

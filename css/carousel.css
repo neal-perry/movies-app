@@ -7,11 +7,62 @@
     font-family: 'Heebo', sans-serif;
     /*font-family: 'Raleway', sans-serif;*/
 }
+
+@font-face {
+    font-family: "VCR";
+    src: url("/fonts/VCR.ttf");
+}
+
+
+.overlay {
+    z-index: 9998;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transition: opacity 0.8s;
+    pointer-events: none;
+    opacity: 0.6;
+}
+#vhs {
+    z-index: 9999;
+    background-image: url(/images/slowVHS.gif);
+}
+
+.hidden {
+    /*display: none;*/
+    opacity: 0;
+}
+
+.vhs-text {
+    font-size: 2em;
+    font-family: "VCR";
+    padding: 1em;
+}
+
+#vhs-date {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 1em;
+    font-size: 2em;
+    font-family: "VCR";
+}
+
+#blur {
+    backdrop-filter: blur(2px) grayscale(80%);
+}
+
+
 .movieArt {
     position: absolute;
     width: 20%;
     height: auto;
-    transition: all 2s;
+    transition: transform 2s;
     right: 0;
     margin-top: 4%;
     box-shadow: 0px 0px 35px 4px rgba(0, 0, 0, 0.5);
@@ -21,6 +72,7 @@
 
 .selected {
     transform: perspective(100em) translate3d(-200%, 0, 0) rotate3d(0, 1, 0, 0deg);
+
 }
 
 .left {
@@ -88,11 +140,13 @@ input {
     align-items: center;
     display: flex;
     flex-direction: column;
+    width: 40%
 }
 
 form {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .title-div {
@@ -100,7 +154,7 @@ form {
 }
 
 .title-div>input {
-    flex-grow: 1;
+    /*flex-grow: 1;*/
 }
 
 .movie-data {
@@ -119,7 +173,7 @@ form {
 }
 
 .movie-data1>input {
-    flex-grow: 1;
+    /*flex-grow: 1;*/
 }
 
 .description {
@@ -129,5 +183,49 @@ form {
 }
 
 .runtime-input {
-    width: 100px;
+    /*width: 100px;*/
 }
+
+
+#sortBox {
+    display: flex;
+}
+
+#azBtn {
+
+    width: 50%;
+}
+
+#zaBtn {
+
+    width: 50%;
+}
+
+input {
+    width: 100%
+}
+
+.w33 {
+    width: 32.8%;
+    display: inline-block;
+}
+
+.btnContainer {
+    display: flex;
+    width: 7%;
+    position: absolute;
+    bottom: 5%;
+    left: 46.5%;
+}
+
+#leftBtn {
+    border-radius: 10px 0 0px 10px;
+    width: 50%;
+
+}
+
+#rightBtn {
+    border-radius: 0 10px 10px 0;
+    width: 50%;
+}
+
