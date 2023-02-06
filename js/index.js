@@ -1,45 +1,46 @@
+"use strict";
 (async () => {
 
     //TODO: FUNCTION THAT GETS MOVIES FROM THE DATABASE AND DYNAMICALLY PLACES HTML ON THE PAGE
     let isRunning = false
 
 
-
-    function placeHolder(movie){
-        if(movie.description === undefined || movie.description === ''){
+    function placeHolder(movie) {
+        if (movie.description === undefined || movie.description === '') {
             movie.description = "no description given";
         }
-        if(movie.genre === undefined || movie.genre === ''){
+        if (movie.genre === undefined || movie.genre === '') {
             movie.genre = "no genre given";
         }
-        if(movie.year === undefined || movie.year === ''){
+        if (movie.year === undefined || movie.year === '') {
             movie.year = "no year given";
         }
-        if(movie.runtime === undefined || movie.runtime === ''){
+        if (movie.runtime === undefined || movie.runtime === '') {
             movie.runtime = "unknown";
         }
-        if(movie.director === undefined || movie.director === ''){
+        if (movie.director === undefined || movie.director === '') {
             movie.director = "no director given";
         }
-        if(movie.actors === undefined || movie.actors === ''){
+        if (movie.actors === undefined || movie.actors === '') {
             movie.actors = "no actors given";
         }
-        if(movie.rating === undefined || movie.rating === ''){
+        if (movie.rating === undefined || movie.rating === '') {
             movie.rating = "no rating given";
         }
         return movie;
     }
 
     let movies = await getMovies();
-    async function reloadMovies(reload = true){
-        if(reload){
+
+    async function reloadMovies(reload = true) {
+        if (reload) {
             movies = await getMovies();
         }
 
-      let html = ""
-      movies.forEach(function(movie){
-        movie = placeHolder(movie)
-         html += `
+        let html = ""
+        movies.forEach(function (movie) {
+            movie = placeHolder(movie)
+            html += `
             <div class="movie-card" data-movieId=${movie.id}>
              <p class="movie-title">${movie.title}</p>
                 <p class="description">${movie.description}</p>
@@ -53,17 +54,17 @@
                 <button class="delete-btn">Delete</button>
             </div>`
 
-      })
-      $("#movieList").html(html);
-  }
+        })
+        $("#movieList").html(html);
+    }
 
 
     //TODO: FUNCTION THAT DELETES A MOVIE FROM THE DATABASE AND RELOADS THE MOVIES LIST
 
-    $(document).on('click', '.delete-btn', function(){
+    $(document).on('click', '.delete-btn', function () {
         let movieID = $(this).parents('[data-movieId]').attr('data-movieId');
         // console.log(movieID);
-        deleteMovie(movieID).then(() => reloadMovies().then(()=>init())
+        deleteMovie(movieID).then(() => reloadMovies().then(() => init())
         );
 
 
@@ -85,19 +86,19 @@
 
         let fillData = true
         let movieOBJ = {}
-        if(fillData){
-            getAPIData(title).then(data=>{
-                if(description === ''){
+        if (fillData) {
+            getAPIData(title).then(data => {
+                if (description === '') {
                     description = data.overview
                 }
-                if(rating === ''){
+                if (rating === '') {
                     rating = data.vote_average
                 }
-                if(year === ''){
+                if (year === '') {
                     year = data.release_date
                 }
 
-                    title = data.original_title
+                title = data.original_title
 
                 movieOBJ = {
                     title,
@@ -110,7 +111,7 @@
                     description
                 }
                 console.log(movieOBJ);
-                addMovie(movieOBJ).then(() => reloadMovies().then(()=>init())
+                addMovie(movieOBJ).then(() => reloadMovies().then(() => init())
                 );
             })
 
@@ -126,25 +127,26 @@
                 description
             }
             console.log(movieOBJ);
-            addMovie(movieOBJ).then(() => reloadMovies().then(()=>init())
+            addMovie(movieOBJ).then(() => reloadMovies().then(() => init())
             );
         }
 
-         document.getElementById("title").value = "";
-         document.getElementById("genre").value = "";
-         document.getElementById("year").value = "";
-         document.getElementById("runtime").value = "";
-         document.getElementById("director").value = "";
-         document.getElementById("actors").value =  "";
-         document.getElementById("rating").value = "";
+        document.getElementById("title").value = "";
+        document.getElementById("genre").value = "";
+        document.getElementById("year").value = "";
+        document.getElementById("runtime").value = "";
+        document.getElementById("director").value = "";
+        document.getElementById("actors").value = "";
+        document.getElementById("rating").value = "";
         document.getElementById("description").value = "";
 
 
     });
-   await reloadMovies();
+    await reloadMovies();
 
-//   TODO: FUNCTION THAT UPDATES A MOVIE IN THE DATABASE AND RELOADS THE MOVIES LIST BY DYNAMICALLY CREATING AN HTML FORM TO INPUT CHANGES AND OVERRIDES THE PREVIOUS MOVIE INFORMATION WHEN THE SAVE BUTTON IS CLICKED
-    $(document).on('click', '.edit-btn', function(){
+//   TODO: FUNCTION THAT UPDATES A MOVIE IN THE DATABASE
+
+    $(document).on('click', '.edit-btn', function () {
         let movieID = $(this).parents('[data-movieId]').attr('data-movieId');
         let movie = movies.find(movie => movie.id == movieID);
         let html = `
@@ -162,7 +164,7 @@
         $(this).parents('[data-movieId]').html(html);
 
     });
-    $(document).on('click', '#saveBtn', function(e){
+    $(document).on('click', '#saveBtn', function (e) {
         e.preventDefault();
         let movieID = $(this).parents('[data-movieId]').attr('data-movieId');
         let title = document.getElementById("etac-title").value;
@@ -172,7 +174,7 @@
         let director = document.getElementById("etac-director").value;
         let actors = document.getElementById("etac-actors").value;
         let rating = document.getElementById("etac-rating").value;
-        updateMovie( {
+        updateMovie({
             id: movieID,
             title,
             genre,
@@ -181,39 +183,39 @@
             director,
             actors,
             rating
-        }).then(() => reloadMovies().then(()=>init())
+        }).then(() => reloadMovies().then(() => init())
         );
     });
 
-//TODO: CREATE A FUNCTION THAT WITH A SEARCH BAR THAT SEARCHES FOR A MOVIE IN THE LIST AND RETURNS THE MOVIE IF FOUND TO THE TOP OF THE MOVIE ARRAY
+//TODO: CREATE A FUNCTION THAT WITH A SEARCH BAR THAT SEARCHES FOR A MOVIE
+
     document.getElementById("searchBtn").addEventListener("click", (e) => {
         e.preventDefault();
         let search = document.getElementById("search").value;
         let movie = movies.find(movie => movie.title.toLowerCase() === search.toLowerCase());
-        if(movie){
-            // console.log(movie);
+        if (movie) {
             let index = movies.indexOf(movie);
-            // console.log(index);
             movies.splice(index, 1);
             movies.unshift(movie);
-            console.log(movies);
-            reloadMovies(false).then(()=>init());
+            reloadMovies(false).then(() => init());
         }
     })
 
 
+    //TODO: FUNCTION THAT SORTS THE MOVIE LIST IN ALPHABETICAL ORDER
 
     function sortAZ() {
         movies.sort((a, b) => a.title.localeCompare(b.title));
-        reloadMovies(false).then(()=>init());
+        reloadMovies(false).then(() => init());
     }
+
     function sortZA() {
         movies.sort((a, b) => b.title.localeCompare(a.title));
-        reloadMovies(false).then(()=>init());
+        reloadMovies(false).then(() => init());
     }
 
     document.getElementById("azBtn").addEventListener("click", (e) => {
-     e.preventDefault()
+        e.preventDefault()
         sortAZ()
     });
     document.getElementById("zaBtn").addEventListener("click", (e) => {
@@ -221,12 +223,12 @@
         sortZA()
     });
 
-let date = new Date().toLocaleDateString()
+
+    //TODO: LOADING SCREEN DATE
+
+
+    let date = new Date().toLocaleDateString()
     $("#vhs-date").html(date)
-    console.log(date);
-
-
-
 
 
 //TODO: CAROUSEL JAVASCRIPT START-------------------------//
@@ -235,20 +237,22 @@ let date = new Date().toLocaleDateString()
 
     async function init() {
         // document.getElementById("m1").style.zIndex = movies.length+1
-        mc.innerHTML = ''
+        mc.innerHTML = '<div class="spotlight"></div>';
         Promise.all(
-            movies.map(({ title }, index) => {
+            movies.map(({title}, index) => {
                 return setAPIData(title, index);
             })
-        ).then(()=>{mc.innerHTML += `<div class ="btnContainer">
+        ).then(() => {
+            mc.innerHTML += `<div class ="btnContainer">
             <button id="leftBtn">
                 <
                 <
             </button>
             <button id="rightBtn">>></button>
         </div>`
-       });
+        });
     }
+
     init();
 
 
@@ -290,19 +294,17 @@ let date = new Date().toLocaleDateString()
     //TODO: FUNCTION FOR LOADING SCREEN ANIMATION
 
 
-
-    function loadingScreen (){
-       if(!isRunning){
-           isRunning = true
-           $("#blur, #vhs").toggleClass("hidden");
-           setTimeout(function(){
-               $("#blur, #vhs").toggleClass("hidden");
-               isRunning = false
-           }, 2000);
-       }
+    function loadingScreen() {
+        if (!isRunning) {
+            isRunning = true
+            $("#blur, #vhs").toggleClass("hidden");
+            setTimeout(function () {
+                $("#blur, #vhs").toggleClass("hidden");
+                isRunning = false
+            }, 2000);
+        }
 
     }
-
 
 
     function manageZ(id) {
@@ -328,7 +330,7 @@ let date = new Date().toLocaleDateString()
                     let source = `http://image.tmdb.org/t/p/w500/${resp.poster_path}`;
                     if (index == 0) {
                         mc.innerHTML += `<img id='m${index}' class='movieArt selected' src='${source}'/>`;
-                    } else if(index === 1){
+                    } else if (index === 1) {
                         // document.getElementById("m1").style.zIndex = movies.length+1
                         mc.innerHTML += `<img id='m${index}' class='movieArt' style="z-index: ${movies.length + 1}" src='${source}'/>`;
 
@@ -353,7 +355,6 @@ let date = new Date().toLocaleDateString()
                 if (film == "") {
                     console.log("no film");
                 } else {
-                    console.log("loading");
                     loadingScreen();
                     fetch(
                         "https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" +
