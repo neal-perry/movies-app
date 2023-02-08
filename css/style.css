@@ -82,11 +82,16 @@ form {
   backdrop-filter: blur(2px) grayscale(80%);
 }
 /* ******************** Navbar ********************** */
+
+
 #navbar {
-  background-image: url("../images/navbar_cinema.jpg"),
+  background-image: url("../images/navbar_cinema1.jpg"),
     url("../images/black.jpeg");
   background-blend-mode: hard-light;
-  background-position: 140% 67%;
+  /*background-position: 95% 67%;*/
+  background-size: 100%;
+  background-repeat: no-repeat;
+  max-height: fit-content;
   z-index: 6666;
   display: flex;
   align-items: center;
